@@ -16,21 +16,28 @@ def read_number(series: pd.Series) -> pd.Series:
 def load_and_clean(csv_path: Path) -> pd.DataFrame:
     """Read the CSV, standardize units, and clean the required columns."""
     df = pd.read_csv(csv_path)
+    raw_shape = df.shape
+    raw_duplicates = int(df.duplicated().sum())
     required = set(NUMERIC_COLUMNS + COMMON_INPUTS + ["Release_Date", "Name"])
     required.discard("Release_Year")  # This column is generated from Release_Date.
     absent = sorted(required - set(df.columns))
     if absent:
         raise ValueError(f"CSV is missing required columns: {', '.join(absent)}")
 
+    parse_failures = {}
+    unit_conversions = 0
     for col in NUMERIC_COLUMNS:
         if col != "Release_Year":
             original = df[col]
             df[col] = read_number(original)
+            nonblank = original.astype("string").str.strip().notna()
+            parse_failures[col] = int((nonblank & df[col].isna()).sum())
             if col == "Memory_Bandwidth":
                 # 4 rows in the data are MB/sec; the rest are GB/sec.
                 in_mb_per_second = original.astype("string").str.contains(
                     "MB/sec", case=False, na=False, regex=False
                 )
+                unit_conversions = int(in_mb_per_second.sum())
                 df.loc[in_mb_per_second, col] /= 1000  # Decimal GB.
 
     dates = pd.to_datetime(
@@ -50,4 +57,15 @@ def load_and_clean(csv_path: Path) -> pd.DataFrame:
         (unreleased & df["Release_Price"].notna()).sum()
     )
     df.loc[unreleased, "Release_Price"] = np.nan
+    df.attrs["cleaning_audit"] = {
+        "raw_rows": raw_shape[0],
+        "raw_columns": raw_shape[1],
+        "duplicate_rows": raw_duplicates,
+        "numeric_columns_converted": len(NUMERIC_COLUMNS) - 1,
+        "numeric_parse_failures": sum(parse_failures.values()),
+        "bandwidth_units_converted": unit_conversions,
+        "invalid_dates": int(dates.isna().sum()),
+        "unreleased_prices_removed": df.attrs["unreleased_price_count"],
+        "rows_deleted": 0,
+    }
     return df

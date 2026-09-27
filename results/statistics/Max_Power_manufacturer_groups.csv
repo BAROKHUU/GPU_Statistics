@@ -1,0 +1,5 @@
+Manufacturer,n,median,mean_rank_input
+AMD,1015,100.0,raw observations
+ATI,92,120.0,raw observations
+Intel,194,35.0,raw observations
+Nvidia,1480,120.0,raw observations

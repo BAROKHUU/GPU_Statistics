@@ -1,0 +1,4 @@
+variable,n,missing,levels,mode,mode_count,mode_percent
+Manufacturer,3406,0,4,Nvidia,1743,51.174398120963005
+Notebook_GPU,3406,0,2,No,2697,79.1837933059307
+Integrated,3392,14,2,No,3018,88.97405660377359

@@ -1,0 +1,2 @@
+test,target,group_variable,groups,n,statistic_H,degrees_of_freedom,p_value,epsilon_squared,significant_0.05
+Kruskal-Wallis,Release_Price,Manufacturer,3,545,74.7882336238748,2,5.753623147390785e-17,0.13429563399238895,True

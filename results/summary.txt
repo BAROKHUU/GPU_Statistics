@@ -1,0 +1,29 @@
+PRIMARY ANALYSIS: DESCRIPTIVE AND INFERENTIAL STATISTICS
+=======================================================
+Source: All_GPUs.csv; total GPUs: 3406.
+Price: removed 11 rows labeled [not released] from the target variable.
+Correlation describes the sample only and does not imply causation.
+The 95% confidence interval assumes the sample is representative/independent; the CSV may not be a random sample.
+Inference is limited to GPUs similar to the data (release years 1998-2017).
+Release prices are sparse and contain large outliers; do not infer current market prices from them.
+
+Max_Power: 2781 observed target values / 3406 GPUs.
+Summary: mean=125.60, median=105.00, 95% CI for mean=[121.77, 129.42].
+Kruskal-Wallis manufacturer comparison: H=256.58, p=2.47e-55, epsilon-squared=0.091.
+
+Release_Price: 545 observed target values / 3406 GPUs.
+Summary: mean=366.65, median=239.00, 95% CI for mean=[307.63, 425.68].
+Kruskal-Wallis manufacturer comparison: H=74.79, p=5.75e-17, epsilon-squared=0.134.
+
+
+OPTIONAL EXTENSION: REGRESSION PREDICTION
+=========================================
+This section is supplementary and is not the main statistical analysis.
+
+Max_Power: train=2224, test=557.
+Selected RandomForest based on the average 5-fold CV MAE on the train set (14.71).
+Test: MAE=13.37, RMSE=31.21, R2=0.914; baseline MAE=75.33.
+
+Release_Price: train=436, test=109.
+Selected RandomForest based on the average 5-fold CV MAE on the train set (86.48).
+Test: MAE=69.71, RMSE=154.53, R2=0.844; baseline MAE=211.38.
